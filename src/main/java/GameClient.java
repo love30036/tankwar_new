@@ -1,15 +1,23 @@
 import object.Direction;
 import object.Tank;
+import object.Wall;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GameClient extends JComponent {
     private int screenWidth;
     private int screenHeight;
     private Tank playerTank;
     private boolean stop;
+    private List<Tank> enemyTanks = new ArrayList<>();
+    private List<Wall> walls = new ArrayList<>();
+
+
 
     public GameClient() {
         this(800, 600);
@@ -37,12 +45,31 @@ public class GameClient extends JComponent {
 
     public void init() {
         playerTank = new Tank(100, 100, Direction.LIFT);
+        for(int i=0;i<3;i++){
+            for(int j=0;j<4;j++){
+                enemyTanks.add(new Tank(350+j*80,500+i*80,Direction.UP,true));
+            }
+        }
+        Wall[] walls = {
+                new Wall(250,150,true,15),
+                new Wall(150,200,false,15),
+                new Wall(800,200,false,15),
+        };
+        this.walls.addAll(Arrays.asList(walls));
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-//        g.drawImage(playerTank.getImage(), playerTank.getX(), playerTank.getY(), null);
+        g.setColor(Color.GRAY);
+        g.fillRect(0,0,screenWidth,screenHeight);
         playerTank.draw(g);
+        for(Tank tank:enemyTanks){
+            tank.draw(g);
+        }
+        for(Wall wall:walls){
+            wall.draw(g);
+        }
+
     }
 
     public void keyPressed(KeyEvent e) {
@@ -61,7 +88,6 @@ public class GameClient extends JComponent {
                 dirs[3] = true;
                 break;
         }
-        playerTank.move();
     }
 
     public void keyReleased(KeyEvent e) {
