@@ -41,26 +41,23 @@ public class GameClient extends JComponent {
 
     @Override
     protected void paintComponent(Graphics g) {
-        g.drawImage(playerTank.getImage(), playerTank.getX(), playerTank.getY(), null);
+//        g.drawImage(playerTank.getImage(), playerTank.getX(), playerTank.getY(), null);
+        playerTank.draw(g);
     }
 
     public void keyPressed(KeyEvent e) {
         boolean[] dirs = playerTank.getDirs();
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-//                playerTank.setDirection(Direction.UP);
                 dirs[0] = true;
                 break;
             case KeyEvent.VK_DOWN:
-//                playerTank.setDirection(Direction.DOWN);
                 dirs[1] = true;
                 break;
             case KeyEvent.VK_LEFT:
-//                playerTank.setDirection(Direction.LIFT);
                 dirs[2] = true;
                 break;
             case KeyEvent.VK_RIGHT:
-//                playerTank.setDirection(Direction.RIGHT);
                 dirs[3] = true;
                 break;
         }

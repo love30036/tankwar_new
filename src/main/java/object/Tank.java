@@ -48,17 +48,17 @@ public class Tank {
         if (direction == Direction.RIGHT) {
             return new ImageIcon("assets/images/itankR.png").getImage();
         }
-        if (direction == Direction.UP_LIFT) {
-            return new ImageIcon("assets/images/itankLU.png").getImage();
-        }
         if (direction == Direction.UP_RIGHT) {
             return new ImageIcon("assets/images/itankRU.png").getImage();
         }
-        if (direction == Direction.DOWN_LIFT) {
-            return new ImageIcon("assets/images/itankLD.png").getImage();
+        if (direction == Direction.UP_LIFT) {
+            return new ImageIcon("assets/images/itankLU.png").getImage();
         }
         if (direction == Direction.DOWN_RIGHT) {
             return new ImageIcon("assets/images/itankRD.png").getImage();
+        }
+        if (direction == Direction.DOWN_LIFT) {
+            return new ImageIcon("assets/images/itankLD.png").getImage();
         }
         return null;
     }
@@ -85,6 +85,22 @@ public class Tank {
             case RIGHT:
                 x += speed;
                 break;
+            case UP_LIFT:
+                y-=speed;
+                x-=speed;
+                break;
+            case UP_RIGHT:
+                y-=speed;
+                x+=speed;
+                break;
+            case DOWN_LIFT:
+                y+=speed;
+                x-=speed;
+                break;
+            case DOWN_RIGHT:
+                y+=speed;
+                x+=speed;
+                break;
         }
     }
 
@@ -97,10 +113,25 @@ public class Tank {
         else if (dirs[0] && dirs[3] && !dirs[2] && !dirs[1]) direction = Direction.UP_RIGHT;
         else if (dirs[1] && dirs[2] && !dirs[0] && !dirs[3]) direction = Direction.DOWN_LIFT;
         else if (dirs[1] && dirs[3] && !dirs[0] && !dirs[2]) direction = Direction.DOWN_RIGHT;
-        else if (dirs[0] && !dirs[3] && !dirs[2] && !dirs[1]) direction = Direction.UP;
+        else if (dirs[0] && !dirs[3] && !dirs[1] && !dirs[2]) direction = Direction.UP;
         else if (dirs[1] && !dirs[3] && !dirs[0] && !dirs[2]) direction = Direction.DOWN;
         else if (dirs[2] && !dirs[3] && !dirs[0] && !dirs[1]) direction = Direction.LIFT;
         else if (dirs[3] && !dirs[1] && !dirs[0] && !dirs[2]) direction = Direction.RIGHT;
 
+    }
+    public void draw(Graphics g){
+        if(!isStop()){
+            determineDirection();
+            move();
+        }
+        g.drawImage(getImage(),x,y,null);
+    }
+    public boolean isStop(){
+        for(int i = 0;i<dirs.length;i++){
+            if(dirs[i]){
+                return false;
+            }
+        }
+        return true;
     }
 }
