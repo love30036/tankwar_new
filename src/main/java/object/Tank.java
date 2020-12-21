@@ -3,23 +3,19 @@ package object;
 import javax.swing.*;
 import java.awt.*;
 
-public class Tank {
+public class Tank extends GameObject{
 
-
-    private int x;
-    private int y;
     private Direction direction;
     private int speed;
     private boolean[] dirs = new boolean[4];
     private boolean enemy;
 
-    public Tank(int x, int y, Direction direction) {
-        this(x, y, direction, false);
+    public Tank(int x, int y, Direction direction,Image image) {
+        this(x, y, direction, false,image);
     }
 
-    public Tank(int x, int y, Direction direction, boolean enemy) {
-        this.x = x;
-        this.y = y;
+    public Tank(int x, int y, Direction direction, boolean enemy,Image image) {
+        super(x, y, image);
         this.direction = direction;
         speed = 5;
         this.enemy = enemy;

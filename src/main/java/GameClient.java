@@ -1,4 +1,5 @@
 import object.Direction;
+import object.GameObject;
 import object.Tank;
 import object.Wall;
 
@@ -16,7 +17,7 @@ public class GameClient extends JComponent {
     private boolean stop;
     private List<Tank> enemyTanks = new ArrayList<>();
     private List<Wall> walls = new ArrayList<>();
-
+    private List<GameObject> objects =new ArrayList<>();
 
 
     public GameClient() {
@@ -44,18 +45,23 @@ public class GameClient extends JComponent {
     }
 
     public void init() {
-        playerTank = new Tank(100, 100, Direction.LIFT);
-        for(int i=0;i<3;i++){
-            for(int j=0;j<4;j++){
-                enemyTanks.add(new Tank(350+j*80,500+i*80,Direction.UP,true));
-            }
-        }
-        Wall[] walls = {
-                new Wall(250,150,true,15),
-                new Wall(150,200,false,15),
-                new Wall(800,200,false,15),
-        };
-        this.walls.addAll(Arrays.asList(walls));
+//        playerTank = new Tank(100, 100, Direction.LIFT);
+//        for(int i=0;i<3;i++){
+//            for(int j=0;j<4;j++){
+//                enemyTanks.add(new Tank(350+j*80,500+i*80,Direction.UP,true));
+//            }
+//        }
+//        Wall[] walls = {
+//                new Wall(250,150,true,15),
+//                new Wall(150,200,false,15),
+//                new Wall(800,200,false,15),
+//        };
+//        this.walls.addAll(Arrays.asList(walls));
+        objects.add(playerTank);
+        objects.addAll(enemyTanks);
+        objects.addAll(walls);
+
+
     }
 
     @Override
@@ -69,6 +75,7 @@ public class GameClient extends JComponent {
         for(Wall wall:walls){
             wall.draw(g);
         }
+
 
     }
 

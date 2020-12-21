@@ -3,19 +3,18 @@ package object;
 import javax.swing.*;
 import java.awt.*;
 
-public class Wall {
-    private int x;
-    private int y;
+public class Wall extends GameObject{
+
     private boolean horizontal;
     private int bricks;
-    private Image image;
-    public Wall(int x, int y, boolean horizontal, int bricks) {
-        this.x = x;
-        this.y = y;
+
+    public Wall(int x, int y, boolean horizontal, int bricks,Image image) {
+        super(x,y,image);
         this.horizontal = horizontal;
         this.bricks = bricks;
-        image = new ImageIcon("assets/images/brick.png").getImage();
+
     }
+    @Override
     public void draw(Graphics g){
         if(horizontal){
             for(int i = 0;i<bricks;i++){
