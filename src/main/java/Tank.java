@@ -1,20 +1,22 @@
-package object;
+import object.Direction;
+import object.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
-public class Tank extends GameObject{
+public class Tank extends GameObject {
 
     private Direction direction;
     private int speed;
     private boolean[] dirs = new boolean[4];
     private boolean enemy;
 
-    public Tank(int x, int y, Direction direction,Image[] image) {
-        this(x, y, direction, false,image);
+    public Tank(int x, int y, Direction direction, Image[] image) {
+        this(x, y, direction, false, image);
     }
 
-    public Tank(int x, int y, Direction direction, boolean enemy,Image[] image) {
+    public Tank(int x, int y, Direction direction, boolean enemy, Image[] image) {
         super(x, y, image);
         this.direction = direction;
         speed = 5;
@@ -37,37 +39,6 @@ public class Tank extends GameObject{
         this.direction = direction;
     }
 
-//    public Image getImage() {
-//
-//        String name = enemy ? "etank" : "itank";
-//
-//        if (direction == Direction.UP) {
-//            return new ImageIcon("assets/images/" + name + "U.png").getImage();
-//        }
-//        if (direction == Direction.DOWN) {
-//            return new ImageIcon("assets/images/" + name + "D.png").getImage();
-//        }
-//        if (direction == Direction.LIFT) {
-//            return new ImageIcon("assets/images/"+ name +"L.png").getImage();
-//        }
-//        if (direction == Direction.RIGHT) {
-//            return new ImageIcon("assets/images/"+ name +"R.png").getImage();
-//        }
-//        if (direction == Direction.UP_RIGHT) {
-//            return new ImageIcon("assets/images/"+ name +"RU.png").getImage();
-//        }
-//        if (direction == Direction.UP_LIFT) {
-//            return new ImageIcon("assets/images/"+ name +"LU.png").getImage();
-//        }
-//        if (direction == Direction.DOWN_RIGHT) {
-//            return new ImageIcon("assets/images/"+ name +"RD.png").getImage();
-//        }
-//        if (direction == Direction.DOWN_LIFT) {
-//            return new ImageIcon("assets/images/"+ name +"LD.png").getImage();
-//        }
-//        return null;
-//    }
-
     public int getX() {
         return x;
     }
@@ -77,6 +48,8 @@ public class Tank extends GameObject{
     }
 
     public void move() {
+        oldX = x;
+        oldY = y;
         switch (direction) {
             case UP:
                 y -= speed;
@@ -107,10 +80,52 @@ public class Tank extends GameObject{
                 x += speed;
                 break;
         }
+
+        collision();
+
     }
 
     public boolean[] getDirs() {
         return dirs;
+    }
+
+    public void collision() {
+        if (x < 0) {
+            x = 0;
+        } else if (x > TankGame.getGameClient().getScreenWidth() - width) {
+            x = TankGame.getGameClient().getScreenWidth() - width;
+        }
+        if (y < 0) {
+            y = 0;
+        } else if (y > TankGame.getGameClient().getScreenHeight() - height) {
+            y = TankGame.getGameClient().getScreenHeight() - height;
+        }
+//        for (Wall wall : TankGame.getGameClient().getWalls()) {
+//            if (getRectangle().intersects(wall.getRectangle())) {
+//                System.out.println("hit");
+//                x = oldX;
+//                y = oldY;
+//                return;
+//            }
+//        }
+//        for (Tank tank : TankGame.getGameClient().getEnemyTanks()) {
+//            if (getRectangle().intersects(tank.getRectangle())) {
+//                System.out.println("hit");
+//                x = oldX;
+//                y = oldY;
+//                return;
+//            }
+//        }
+        List<GameObject> objects = TankGame.getGameClient().getObjects();
+
+        for(GameObject object:objects){
+            if(object!=this&&getRectangle().intersects(object.getRectangle())){
+                x = oldX;
+                y = oldY;
+                return;
+            }
+        }
+
     }
 
     private void determineDirection() {

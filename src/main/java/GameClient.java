@@ -64,10 +64,10 @@ public class GameClient extends JComponent {
                 new Wall(800,200,false,15,brickImage),
         };
 
-
+        this.walls.addAll(Arrays.asList(walls));
         objects.add(playerTank);
         objects.addAll(enemyTanks);
-        objects.addAll(Arrays.asList(walls));
+        objects.addAll(this.walls);
 
 
     }
@@ -127,5 +127,25 @@ public class GameClient extends JComponent {
                 break;
         }
 
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public List<Wall> getWalls() {
+        return walls;
+    }
+
+    public List<Tank> getEnemyTanks() {
+        return enemyTanks;
+    }
+
+    public List<GameObject> getObjects() {
+        return objects;
     }
 }

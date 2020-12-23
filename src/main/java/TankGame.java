@@ -4,9 +4,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class TankGame {
+    private static GameClient gameClient;
     public static void main(String[] args) {
         JFrame jFrame = new JFrame();
-        GameClient gameClient = new GameClient(1024,768);
+        gameClient = new GameClient(1024,768);
         jFrame.add(gameClient);
         jFrame.setTitle("TankWar!!");
         jFrame.setVisible(true);
@@ -30,5 +31,9 @@ public class TankGame {
 
 
 
+    }
+
+    public static GameClient getGameClient() {
+        return gameClient;
     }
 }
