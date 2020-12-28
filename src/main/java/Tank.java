@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Tank extends GameObject {
 
-    private Direction direction;
+    protected Direction direction;
     private int speed;
     private boolean[] dirs = new boolean[4];
     private boolean enemy;
@@ -90,42 +90,40 @@ public class Tank extends GameObject {
     }
 
     public void collision() {
-        if (x < 0) {
-            x = 0;
-        } else if (x > TankGame.getGameClient().getScreenWidth() - width) {
-            x = TankGame.getGameClient().getScreenWidth() - width;
+        if(collisionBound()){
+
+           return;
         }
-        if (y < 0) {
-            y = 0;
-        } else if (y > TankGame.getGameClient().getScreenHeight() - height) {
-            y = TankGame.getGameClient().getScreenHeight() - height;
-        }
-//        for (Wall wall : TankGame.getGameClient().getWalls()) {
-//            if (getRectangle().intersects(wall.getRectangle())) {
-//                System.out.println("hit");
-//                x = oldX;
-//                y = oldY;
-//                return;
-//            }
-//        }
-//        for (Tank tank : TankGame.getGameClient().getEnemyTanks()) {
-//            if (getRectangle().intersects(tank.getRectangle())) {
-//                System.out.println("hit");
-//                x = oldX;
-//                y = oldY;
-//                return;
-//            }
-//        }
         List<GameObject> objects = TankGame.getGameClient().getObjects();
 
-        for(GameObject object:objects){
-            if(object!=this&&getRectangle().intersects(object.getRectangle())){
+        for (GameObject object : objects) {
+            if (object != this && getRectangle().intersects(object.getRectangle())) {
                 x = oldX;
                 y = oldY;
                 return;
             }
         }
 
+    }
+//    Rectangle rectangle = new Rectangle(TankGame.getGameClient().getScreenWidth(),TankGame.getGameClient().getScreenHeight());
+    public boolean collisionBound(){
+        boolean collision = false;
+        if (x < 0) {
+            x = 0;
+            collision =true;
+        } else if (x > TankGame.getGameClient().getScreenWidth() - width) {
+            x = TankGame.getGameClient().getScreenWidth() - width;
+            collision =true;
+        }
+        if (y < 0) {
+            y = 0;
+            collision =true;
+        } else if (y > TankGame.getGameClient().getScreenHeight() - height) {
+            y = TankGame.getGameClient().getScreenHeight() - height;
+            collision =true;
+        }
+
+        return collision;
     }
 
     private void determineDirection() {
@@ -155,5 +153,19 @@ public class Tank extends GameObject {
             }
         }
         return true;
+    }
+
+    public void fire() {
+        TankGame.getGameClient().addGameObject(new Bullet(x + width / 2 - GameClient.BulletImage[0].getWidth(null) / 2,
+                y + height / 2 - GameClient.BulletImage[0].getHeight(null) / 2, direction, enemy, GameClient.BulletImage)
+        );
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public boolean isEnemy() {
+        return enemy;
     }
 }
