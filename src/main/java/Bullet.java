@@ -18,16 +18,12 @@ public class Bullet extends Tank {
             return;
         }
         move();
-        collision();
         g.drawImage(image[direction.ordinal()], x, y, null);
     }
 
     @Override
-    public void collision() {
-        if (collisionBound()) {
-            alive = false;
-            return;
-        }
+    public boolean collisionObject() {
+        boolean isCollision = false;
         List<GameObject> objects = TankGame.getGameClient().getObjects();
 
         for (GameObject object : objects) {
@@ -40,12 +36,28 @@ public class Bullet extends Tank {
                 }
             }
             if (getRectangle().intersects(object.getRectangle())) {
-                alive = false;
+
                 if (object instanceof Tank) {
-                    object.setAlive(false);
+                    ((Tank)object).getHurt(1);
+//                    object.setAlive(false);
+
                 }
-                return;
+                isCollision =true ;
             }
         }
+        return isCollision;
+    }
+
+    @Override
+    public boolean collision() {
+        boolean isCollision = collisionBound();
+        if (!isCollision) {
+            isCollision=collisionObject();
+        }
+        if(isCollision){
+            alive = false;
+            return true;
+        }
+        return false;
     }
 }

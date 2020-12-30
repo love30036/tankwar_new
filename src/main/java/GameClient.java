@@ -7,14 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameClient extends JComponent {
     private int screenWidth;
     private int screenHeight;
-    private Tank playerTank;
+    private PlayerTank playerTank;
     private boolean stop;
-    private List<GameObject> objects = new ArrayList<>();
+    private CopyOnWriteArrayList<GameObject> objects = new CopyOnWriteArrayList<>();
     public static Image[] BulletImage = new Image[8];
+    public static Image[] eTankImage=new Image[8];
 
 
     public GameClient() {
@@ -44,7 +46,7 @@ public class GameClient extends JComponent {
     public void init() {
         Image[] brickImage = {Tools.getImage("brick.png")};
         Image[] iTankImage = new Image[8];
-        Image[] eTankImage = new Image[8];
+//        Image[] eTankImage = new Image[8];
 
         String[] sub = {"U.png", "D.png", "L.png", "R.png", "LU.png", "RU.png", "LD.png", "RD.png"};
 
@@ -53,10 +55,10 @@ public class GameClient extends JComponent {
             eTankImage[i] = Tools.getImage("etank" + sub[i]);
             BulletImage[i] = Tools.getImage("missile" + sub[i]);
         }
-        playerTank = new Tank(500, 100, Direction.DOWN, iTankImage);
+        playerTank = new PlayerTank(500, 100, Direction.DOWN, iTankImage);
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
-                objects.add(new Tank(350 + j * 100, 500 + 80 * i, Direction.UP, true, eTankImage));
+                objects.add(new EnemyTank(350 + j * 100, 500 + 80 * i, Direction.UP,  eTankImage));
             }
         }
         Wall[] walls = {
@@ -76,20 +78,22 @@ public class GameClient extends JComponent {
     protected void paintComponent(Graphics g) {
         g.setColor(Color.GRAY);
         g.fillRect(0, 0, screenWidth, screenHeight);
-
+        g.setColor(Color.black);
+        g.drawString("hp = "+playerTank.hp,0,10);
         for (GameObject object : objects) {
             object.draw(g);
         }
 
-
-        Iterator<GameObject> iterator = objects.iterator();
-        while (iterator.hasNext()){
-            if(!(iterator.next()).isAlive()){
-                iterator.remove();
+        for(GameObject object:objects){
+            if(!object.isAlive()){
+                objects.remove(object);
             }
         }
 
-        System.out.println(objects.size());
+
+//        System.out.println(objects.size());
+
+        checkGameStatus();
 
 
     }
@@ -111,6 +115,9 @@ public class GameClient extends JComponent {
                 break;
             case KeyEvent.VK_CONTROL:
                 playerTank.fire();
+                break;
+            case KeyEvent.VK_A:
+                playerTank.superFire();
                 break;
         }
     }
@@ -147,5 +154,22 @@ public class GameClient extends JComponent {
     }
     public void addGameObject(GameObject object){
         objects.add(object);
+    }
+
+    public void checkGameStatus(){
+        boolean gameWin = true;
+
+        for(GameObject object:objects){
+            if(object instanceof EnemyTank){
+                gameWin=false;
+            }
+        }
+        if(gameWin){
+            for(int i = 0;i<3;i++){
+                for(int j= 0;j<4;j++){
+                    addGameObject(new EnemyTank(350 + j * 100, 500 + 80 * i, Direction.UP,  eTankImage));
+                }
+            }
+        }
     }
 }
